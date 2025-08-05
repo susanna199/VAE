@@ -13,7 +13,17 @@ class VAE(keras.Model):
         self.total_loss_tracker = keras.metrics.Mean(name="total_loss")
         self.reconstruction_loss_tracker = keras.metrics.Mean(name="reconstruction_loss")
         self.kl_loss_tracker = keras.metrics.Mean(name="kl_loss")
+        
+    def get_config(self):
+        config = super(VAE, self).get_config()
+        # Note: do NOT include encoder and decoder in config directly
+        return config
 
+    @classmethod
+    def from_config(cls, config):
+        # encoder and decoder must be set manually after loading
+        return cls(encoder=None, decoder=None, **config)
+        
     @property
     def metrics(self):
         return [
